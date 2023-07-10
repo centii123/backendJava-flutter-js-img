@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Imágenes</title>
+    <style>
+        /* Estilos CSS para la lista de imágenes */
+        .container {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .image-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .image-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .image-item img {
+            width: 100px;
+            height: 100px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lista de Imágenes</h1>
+        <ul class="image-list" id="imageList"></ul>
+    </div>
+
+    <script>
+        fetch('http://localhost:8080/api/images/2/',{
+            headers: {
+                    "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY4ODI4MDk3OCwicm9sIjoiUk9MRV9BRE1JTiJ9.4VaEn1gvK_n1UdYI9nUkGOD-1oemzdbn6fh64MxTgpWpr4KsUS6b0spHMaCtZhkG6GCqb_ygV5rE9i_ayzKhqg"
+                }
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                const imageList = document.getElementById('imageList');
+
+                data.forEach(image => {
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('image-item');
+
+                    const imageElement = document.createElement('img');
+                    imageElement.src = `data:${image.tipo};base64,${image.datos}`;
+                    imageElement.alt = image.nombre;
+
+                    const nameElement = document.createElement('span');
+                    nameElement.textContent = image.nombre;
+
+                    listItem.appendChild(imageElement);
+                    listItem.appendChild(nameElement);
+
+                    imageList.appendChild(listItem);
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+</body>
+</html>

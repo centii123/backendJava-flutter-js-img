@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Subir Imagen</title>
+    <style>
+        /* Estilos CSS para mejorar la apariencia del formulario */
+        .container {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Subir Imagen</h1>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <input type="file" name="file" id="fileInput">
+            <button type="submit">Subir</button>
+        </form>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        const uploadForm = document.getElementById('uploadForm');
+        const fileInput = document.getElementById('fileInput');
+        const messageDiv = document.getElementById('message');
+
+        uploadForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            console.log(fileInput.files[0])
+
+            fetch('http://localhost:8080/api/images', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    "Authorization": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY4ODM2NDgyOCwicm9sIjoiUk9MRV9BRE1JTiJ9.VvA9bSkmvlbDNfNMcJi4mex1VieZ4pUhyrbPKPqlJ_Cd4V9CJEa3YwcKZPQHzVyZtwuQ583_XRMsiipqYrPM8A"
+                }
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        messageDiv.textContent = 'La imagen se ha subido correctamente.';
+                        messageDiv.style.color = 'green';
+                    } else {
+                        messageDiv.textContent = 'Error al subir la imagen.';
+                        messageDiv.style.color = 'red';
+                    }
+                })
+                .catch((error) => {
+                    messageDiv.textContent = 'Error al subir la imagen.';
+                    messageDiv.style.color = 'red';
+                    console.error(error);
+                });
+        });
+    </script>
+</body>
+
+</html>
